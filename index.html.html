@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وصل | نظام مقدمي خدمة حجاج الخارج</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --emerald:#0F8B6E;
+    --teal:#005B5A;
+    --mint:#D9F1EA;
+    --sand:#E8DFC8;
+    --white:#FFFFFF;
+    --gray:#F7F8FA;
+    --ink:#1B1F23;
+    --gold:#B88A3B;
+    --ink-soft:#5B6570;
+    --border:rgba(27,31,35,0.08);
+    --radius:22px;
+    --radius-sm:14px;
+    --shadow: 0 10px 40px -12px rgba(0,91,90,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: linear-gradient(180deg, var(--mint) 0%, var(--gray) 340px, var(--gray) 100%);
+    color:var(--ink);
+    font-family:'Almarai', sans-serif;
+    line-height:1.9;
+    min-height:100vh;
+  }
+  ::selection{ background: var(--emerald); color:#fff; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(16px) saturate(160%);
+    background: rgba(255,255,255,0.72);
+    border-bottom:1px solid var(--border);
+  }
+  .top-inner{
+    max-width:1180px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand svg{ width:38px; height:38px; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.25; }
+  .brand-text b{ font-size:1.18rem; font-weight:800; color:var(--teal); letter-spacing:.5px; }
+  .brand-text span{ font-size:.72rem; color:var(--ink-soft); font-weight:400; }
+  nav.links{ display:flex; gap:26px; font-size:.92rem; font-weight:700; color:var(--ink-soft); }
+  nav.links a{ color:inherit; text-decoration:none; cursor:pointer; transition:color .2s; }
+  nav.links a:hover, nav.links a.active{ color:var(--emerald); }
+
+  /* ---------- Hero ---------- */
+  .hero{ max-width:1180px; margin:0 auto; padding:56px 24px 28px; text-align:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--white); border:1px solid var(--border); color:var(--gold);
+    font-size:.78rem; font-weight:800; padding:7px 16px; border-radius:999px;
+    box-shadow: var(--shadow); margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:'Amiri', serif; font-weight:700; font-size:2.5rem;
+    color:var(--teal); margin:0 0 14px; line-height:1.5;
+  }
+  .hero p.lead{ color:var(--ink-soft); font-size:1.05rem; max-width:640px; margin:0 auto 30px; }
+
+  .stat-row{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+  .stat-card{
+    background:var(--white); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:16px 26px; min-width:130px; box-shadow: var(--shadow);
+  }
+  .stat-card b{ display:block; font-size:1.7rem; font-weight:800; color:var(--emerald); font-family:'Amiri',serif; }
+  .stat-card span{ font-size:.78rem; color:var(--ink-soft); font-weight:700; }
+
+  /* ---------- Search / filter ---------- */
+  .toolbar{
+    max-width:1180px; margin:34px auto 10px; padding:0 24px;
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  }
+  .search-box{
+    flex:1; min-width:260px; position:relative;
+  }
+  .search-box input{
+    width:100%; padding:14px 48px 14px 18px; border-radius:999px; border:1px solid var(--border);
+    background:var(--white); font-family:inherit; font-size:.95rem; color:var(--ink);
+    box-shadow: var(--shadow); outline:none; transition:border-color .2s;
+  }
+  .search-box input:focus{ border-color:var(--emerald); }
+  .search-box .ic{ position:absolute; right:18px; top:50%; transform:translateY(-50%); color:var(--ink-soft); }
+  .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    border:1px solid var(--border); background:var(--white); color:var(--ink-soft);
+    padding:9px 18px; border-radius:999px; font-size:.82rem; font-weight:700; cursor:pointer;
+    transition:all .18s; user-select:none;
+  }
+  .chip.active{ background:var(--emerald); color:#fff; border-color:var(--emerald); }
+  .chip:hover{ border-color:var(--emerald); color:var(--emerald); }
+  .chip.active:hover{ color:#fff; }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    max-width:1180px; margin:26px auto 90px; padding:0 24px;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px;
+  }
+  .card{
+    background:var(--white); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 22px 20px; cursor:pointer; transition:transform .18s, box-shadow .18s;
+    position:relative; overflow:hidden;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow: var(--shadow); }
+  .card::before{
+    content:""; position:absolute; inset-inline-start:0; top:0; bottom:0; width:4px;
+    background:linear-gradient(180deg,var(--emerald),var(--teal));
+  }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .card-num{ font-family:'Amiri', serif; font-size:1.5rem; font-weight:700; color:var(--teal); }
+  .badge{
+    font-size:.68rem; font-weight:800; padding:5px 12px; border-radius:999px; white-space:nowrap;
+  }
+  .badge.linked{ background:var(--mint); color:var(--teal); }
+  .badge.none{ background:var(--sand); color:#7a6a3d; }
+  .card-title{ font-size:1rem; font-weight:800; margin:10px 0 2px; color:var(--ink); }
+  .card-subtitle{ font-size:.82rem; color:var(--emerald); font-weight:700; margin-bottom:10px; }
+  .card-excerpt{
+    font-size:.85rem; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:2;
+    -webkit-box-orient:vertical; overflow:hidden; line-height:1.7;
+  }
+  .card-foot{ margin-top:14px; display:flex; align-items:center; gap:6px; font-size:.78rem; color:var(--emerald); font-weight:700; }
+
+  /* ---------- Detail (article view) ---------- */
+  .detail-overlay{
+    position:fixed; inset:0; background:rgba(27,31,35,0.45); backdrop-filter:blur(4px);
+    z-index:100; display:none; align-items:flex-start; justify-content:center; overflow-y:auto; padding:40px 16px;
+  }
+  .detail-overlay.open{ display:flex; }
+  .detail{
+    background:var(--gray); border-radius:26px; max-width:1080px; width:100%;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.35); overflow:hidden; margin-bottom:40px;
+  }
+  .detail-head{
+    background:linear-gradient(120deg, var(--teal), var(--emerald));
+    color:#fff; padding:30px 34px 26px; position:relative;
+  }
+  .detail-close{
+    position:absolute; left:20px; top:20px; width:38px; height:38px; border-radius:50%;
+    background:rgba(255,255,255,0.18); border:none; color:#fff; font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:background .18s;
+  }
+  .detail-close:hover{ background:rgba(255,255,255,0.32); }
+  .detail-head .k{ font-size:.78rem; opacity:.85; font-weight:700; letter-spacing:.5px; }
+  .detail-head h2{ font-family:'Amiri',serif; font-size:1.9rem; margin:6px 0 4px; font-weight:700; }
+  .detail-head .sub{ font-size:.9rem; opacity:.9; font-weight:700; }
+
+  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  @media (max-width: 760px){ .compare{ grid-template-columns:1fr; } }
+  .col{ padding:28px 30px; }
+  .col.system{ border-inline-start:1px solid var(--border); background:#fff; }
+  .col.reg{ background:var(--gray); }
+  .col-label{
+    display:flex; align-items:center; gap:8px; font-size:.78rem; font-weight:800;
+    color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; margin-bottom:16px;
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; }
+  .dot.system{ background:var(--gold); }
+  .dot.reg{ background:var(--emerald); }
+  .article-text{ white-space:pre-line; font-size:.96rem; color:var(--ink); line-height:2; }
+  .reg-block{
+    background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:18px 20px; margin-bottom:16px;
+  }
+  .reg-block:last-child{ margin-bottom:0; }
+  .reg-block .rb-num{ font-family:'Amiri',serif; font-weight:700; color:var(--teal); font-size:1.05rem; margin-bottom:2px; }
+  .reg-block .rb-sub{ font-size:.78rem; color:var(--emerald); font-weight:700; margin-bottom:8px; }
+  .empty-reg{
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;
+    padding:40px 10px; color:var(--ink-soft);
+  }
+  .empty-reg svg{ opacity:.5; }
+  .empty-reg b{ color:var(--ink); font-size:.92rem; }
+  .empty-reg span{ font-size:.8rem; }
+  .note-flag{
+    margin-top:16px; font-size:.78rem; background:var(--sand); color:#7a6a3d; padding:10px 14px;
+    border-radius:var(--radius-sm); font-weight:700;
+  }
+  .detail-actions{ display:flex; gap:10px; padding:16px 30px 26px; }
+  .btn{
+    border:1px solid var(--border); background:#fff; padding:9px 18px; border-radius:999px;
+    font-size:.8rem; font-weight:700; cursor:pointer; color:var(--ink-soft); display:flex; align-items:center; gap:6px;
+    transition:all .18s;
+  }
+  .btn:hover{ border-color:var(--emerald); color:var(--emerald); }
+
+  footer{
+    text-align:center; padding:30px 20px 50px; color:var(--ink-soft); font-size:.8rem;
+  }
+  .no-results{ grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce){
+    .card, .detail-close, .chip, .btn{ transition:none !important; }
+  }
+
+  /* ---------- About page ---------- */
+  .about-body{ padding:30px 34px 36px; }
+  .about-lead{ color:var(--ink-soft); font-size:.95rem; margin:0 0 16px; line-height:1.9; }
+  .team-label{ font-size:.8rem; font-weight:800; color:var(--teal); margin:22px 0 10px; }
+  .team-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .team-list li{
+    background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:12px 16px; font-size:.9rem; font-weight:700; color:var(--ink);
+  }
+
+  /* ---------- Favorite star ---------- */
+  .fav-btn{
+    background:none; border:none; cursor:pointer; font-size:1.15rem; line-height:1;
+    color:#c9cdd2; transition:transform .15s, color .15s; padding:2px;
+  }
+  .fav-btn.active{ color:var(--gold); transform:scale(1.12); }
+  .card-top-right{ display:flex; align-items:center; gap:8px; }
+
+  /* ---------- Detail prev/next nav ---------- */
+  .detail-nav{
+    display:flex; justify-content:space-between; gap:10px; padding:14px 30px;
+    background:#fff; border-bottom:1px solid var(--border);
+  }
+  .nav-btn{
+    border:1px solid var(--border); background:var(--gray); color:var(--ink-soft);
+    padding:9px 16px; border-radius:999px; font-size:.82rem; font-weight:700; font-family:inherit;
+    cursor:pointer; transition:all .18s; max-width:48%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .nav-btn:hover:not(:disabled){ border-color:var(--emerald); color:var(--emerald); }
+  .nav-btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+  /* ---------- Mobile refinements ---------- */
+  @media (max-width: 640px){
+    .top-inner{ padding:12px 16px; }
+    .brand-text span{ display:none; }
+    nav.links{ gap:14px; font-size:.78rem; }
+    .hero{ padding:38px 16px 20px; }
+    .hero h1{ font-size:1.7rem; }
+    .hero p.lead{ font-size:.92rem; }
+    .stat-card{ min-width:100px; padding:12px 16px; }
+    .stat-card b{ font-size:1.3rem; }
+    .toolbar{ margin:24px auto 6px; padding:0 16px; flex-direction:column; align-items:stretch; }
+    .filters{ justify-content:flex-start; overflow-x:auto; padding-bottom:4px; flex-wrap:nowrap; }
+    .chip{ white-space:nowrap; }
+    .grid{ padding:0 16px; grid-template-columns:1fr; gap:12px; margin:20px auto 60px; }
+    .detail-overlay{ padding:0; align-items:stretch; }
+    .detail{ border-radius:0; min-height:100vh; }
+    .detail-head{ padding:22px 20px 20px; }
+    .detail-head h2{ font-size:1.5rem; }
+    .col{ padding:22px 18px; }
+    .detail-nav{ padding:12px 18px; }
+    .nav-btn{ font-size:.74rem; padding:8px 12px; }
+    .about-body{ padding:22px 18px 28px; }
+    .detail-actions{ padding:14px 18px 22px; flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" fill="none">
+        <circle cx="11" cy="20" r="6" fill="#0F8B6E"/>
+        <circle cx="29" cy="20" r="6" fill="#005B5A"/>
+        <path d="M15 20 H25" stroke="#B88A3B" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div class="brand-text">
+        <b>وصل</b>
+        <span>ربط الأنظمة بلوائحها التنفيذية</span>
+      </div>
+    </div>
+    <nav class="links">
+      <a class="active" data-nav="home">الرئيسية</a>
+      <a data-nav="favorites">المفضلة</a>
+      <a data-nav="about">عن وصل</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>نظام مقدمي خدمة حجاج الخارج<br>ولائحته التنفيذية</h1>
+  <p class="lead">كل مادة نظامية، إلى جانب ما يقابلها من نصوص اللائحة التنفيذية — في مكان واحد، مرتّب ومصدره موثّق.</p>
+  <div class="stat-row" id="statRow"></div>
+</section>
+
+<div class="toolbar">
+  <div class="search-box">
+    <input id="searchInput" type="text" placeholder="ابحثي برقم المادة أو بكلمة من نصّها...">
+    <span class="ic">🔍</span>
+  </div>
+  <div class="filters">
+    <div class="chip active" data-filter="all">الكل</div>
+    <div class="chip" data-filter="linked">لها مقابل في اللائحة</div>
+    <div class="chip" data-filter="none">بلا مقابل</div>
+    <div class="chip" data-filter="fav">⭐ المفضلة</div>
+  </div>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<div class="detail-overlay" id="overlay">
+  <div class="detail" id="detailBox"></div>
+</div>
+
+<div class="detail-overlay" id="aboutOverlay">
+  <div class="detail about-card">
+    <div class="detail-head" style="background:linear-gradient(120deg, var(--teal), var(--emerald));">
+      <button class="detail-close" id="aboutClose">✕</button>
+      <div class="k">عن المنصة</div>
+      <h2>عن وصل</h2>
+    </div>
+    <div class="about-body">
+      <p class="about-lead">
+        <strong>وصل</strong> منصة رقمية تربط النصوص النظامية بما يقابلها من نصوص لوائحها التنفيذية، بشكل مباشر ومرتّب،
+        لتسهّل الرجوع إلى العلاقة بين النظام ولائحته دون الحاجة للتنقل بين وثائق متفرقة.
+      </p>
+      <p class="about-lead">
+        المنصة من إعداد متدربات التدريب التعاوني بالإدارة العامة للشؤون القانونية بوزارة الحج والعمرة.
+      </p>
+      <div class="team-label">فريق الإعداد</div>
+      <ul class="team-list" id="teamList"></ul>
+      <div class="team-label">الإشراف</div>
+      <ul class="team-list" id="supervisorList"></ul>
+    </div>
+  </div>
+</div>
+
+<footer>منصة وصل — أُعدّت اعتمادًا على النصوص الرسمية للنظام ولائحته التنفيذية</footer>
+
+<script>
+const DATA = {"nizam": [{"num": "١", "id": "n1", "title": "المادة الأولى", "subtitle": "التعريفات", "text": "يكون للألفاظ والمصطلحات الآتية -أينما وردت في النظام- المعنى المبين أمام كل منها:\n1. الوزارة: وزارة الحج والعمرة.\n2. الوزير: وزير الحج والعمرة.\n3. النظام: نظام مقدمي خدمة حجاج الخارج.\n4. اللائحة: اللائحة التنفيذية للنظام.\n5. الحجاج: الحجاج القادمون من خارج المملكة.\n6. شركات ضيافة الحجاج:\nأ- الشركات المرخص لها بخدمة الحجاج في مدينة مكة المكرمة والمشاعر المقدسة.\nب- الشركة المرخص لها بسقاية الحجاج في مساكنهم في حدود مدينة مكة المكرمة.\nج- الشركة المرخص لها باستقبال وتوديع الحجاج في منافذ المملكة، وترتيب إجراءات عودتهم إلى بلادهم.\nد- الشركة المرخص لها بخدمة زوار المسجد النبوي.\n7. شركات تقديم الخدمة: الشركات المرخص لها لتقديم الخدمة للحجاج، وفق تصنيف وتوصيف ومستويات الخدمة المعتمدة من الوزارة.", "laiha": ["l1"]}, {"num": "٢", "id": "n2", "title": "المادة الثانية", "subtitle": "أهداف النظام", "text": "يهدف النظام إلى ما يأتي:\n١- رفع كفاءة العاملين في مجال خدمة ضيوف الرحمن.\n٣- العمل على توسيع قاعدة المساهمين في شركات ضيافة الحجاج وشركات تقديم الخدمة، واستقطاب ذوي الكفاءات من السعوديين الراغبين في العمل؛ وذلك لتقديم أفضل الخدمات للحجاج.\n٤- العمل على تطوير الخدمات المقدمة للحجاج، بما يمكّنهم من أداء فريضة الحج، وزيارة المشاعر المقدسة، وزيارة المسجد النبوي، بكل يسر وسهولة.", "laiha": ["l2"], "note": "الفقرة (٢) لم تظهر بوضوح في نسخة المصدر المرفوعة"}, {"num": "٣", "id": "n3", "title": "المادة الثالثة", "subtitle": null, "text": "لا يجوز للشركات المشار إليها في الفقرتين الفرعيتين (أ) و(د) من الفقرة (٦) من المادة الأولى من النظام ممارسة تقديم الخدمة بنفسها، وعليها أن تتعاقد مع شركة أو شركات لتقديم الخدمة للحجاج وفقاً لأحكام المادة (العاشرة) من النظام.", "laiha": []}, {"num": "٤", "id": "n4", "title": "المادة الرابعة", "subtitle": null, "text": "يجوز لأي من الشركتين، المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (٦) من المادة الأولى من النظام، أن تتعاقد شركة أو شركات لتقديم الخدمة للحجاج وفقاً لأحكام المادة (العاشرة) من النظام.", "laiha": []}, {"num": "٥", "id": "n5", "title": "المادة الخامسة", "subtitle": null, "text": "تؤدي شركات تقديم الخدمة والشركتان المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (٦) من المادة (الأولى) من النظام، خدماتها للحجاج بناءً على ما يحدده التصنيف النوعي والكمي للخدمات وآليات تسعيرها الذي تصدره الوزارة، وذلك وفقاً لنطاق اختصاص تلك الشركات الذي تحدده اللائحة.", "laiha": ["l7", "l16"]}, {"num": "٦", "id": "n6", "title": "المادة السادسة", "subtitle": null, "text": "1. تقتصر ملكية شركات ضيافة الحجاج، وإدارتها؛ على السعوديين.\n2. لا يجوز تأسيس شركات جديدة لضيافة الحجاج.", "laiha": ["l3", "l5"], "note": "الربط يخص الفقرة (١) من هذه المادة"}, {"num": "٧", "id": "n7", "title": "المادة السابعة", "subtitle": null, "text": "يجوز للأشخاص ذوي الصفة الطبيعية أو الاعتبارية الحصول على ترخيص بممارسة نشاط تقديم الخدمة للحجاج بعد مضي ثلاث سنوات من نفاذ النظام، وفقاً لأحكامه والأنظمة الأخرى المنظمة لذلك.", "laiha": ["l5", "l6", "l8", "l9", "l10", "l11", "l12", "l13", "l14"]}, {"num": "٨", "id": "n8", "title": "المادة الثامنة", "subtitle": null, "text": "دون إخلال بما نصت عليه الفقرة (١) من المادة (السادسة) من النظام، يكون توريث الأسهم في شركات ضيافة الحجاج وفقاً لأحكام نظام الأحوال الشخصية، وتبين اللائحة أحكام التنازل بالنسبة إلى الورثة غير السعوديين.", "laiha": ["l4", "l5"], "note": "والمادة الخامسة، الفقرات (٢)، (٣)، (٤)"}, {"num": "٩", "id": "n9", "title": "المادة التاسعة", "subtitle": null, "text": "تصدر الوزارة تصنيفاً نوعياً وكمياً للخدمات وآليات تسعيرها -التي تقدمها شركات تقديم الخدمة والشركتان المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (6) من المادة (الأولى) من النظام للحجاج- يراعى فيه احتياج الحاج، وتحدد شروط ومتطلبات تقديم الخدمة بما فيها الضمانات المالية اللازمة لذلك، وتلتزم الشركات بتقديم الخدمة وفقاً لذلك التصنيف.", "laiha": ["l6", "l15", "l16"]}, {"num": "١٠", "id": "n10", "title": "المادة العاشرة", "subtitle": null, "text": "على شركات تقديم الخدمة الحصول على ترخيص من الوزارة، تكون مدته خمس سنوات قابلة للتجديد، وتحدد الوزارة المقابل المالي لإصدار الترخيص والشروط والإجراءات اللازمة لذلك.", "laiha": ["l8", "l9", "l10", "l11", "l12", "l13", "l14"]}, {"num": "١١", "id": "n11", "title": "المادة الحادية عشرة", "subtitle": null, "text": "على الحاج -أو من يمثله- التعاقد مباشرةً مع إحدى شركات تقديم الخدمة أو الشركتين المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (6) من المادة (الأولى) من النظام.", "laiha": []}, {"num": "١٢", "id": "n12", "title": "المادة الثانية عشرة", "subtitle": "لجنة النظر في المخالفات", "text": "1. تشكل بقرار من الوزير لجنة من (خمسة) أعضاء من حملة المؤهلات الشرعية أو النظامية ويُسمى أحدهم رئيساً، تتولى النظر في مخالفة أحكام النظام أو القرارات الصادرة تنفيذاً له، وتوقيع العقوبات المنصوص عليها في النظام، وتصدر قرارات اللجنة بالأغلبية، ويعتمدها الوزير.\n2. تحدد اللائحة إجراءات عمل اللجنة.", "laiha": ["l18"]}, {"num": "١٣", "id": "n13", "title": "المادة الثالثة عشرة", "subtitle": "العقوبات", "text": "دون إخلال بأي عقوبة أشد مقررة نظاماً، تعاقب شركة ضيافة الحجاج أو شركة تقديم الخدمة أو أعضاء مجالس إدارتها، أو أي من العاملين فيها؛ عند مخالفة أحكام النظام، أو لائحته أو القرارات الصادرة تنفيذاً له؛ بعقوبة (أو أكثر) وفقاً لما يأتي:\nالعقوبات المقررة على شركات ضيافة الحجاج أو شركات تقديم الخدمة:\nأ- الإنذار.\nب- غرامة لا تزيد على (500,000) خمسمائة ألف ريال، ويجوز مضاعفة الغرامة في حال تكرار المخالفة.\nج- إيقاف شركة تقديم الخدمة عن العمل مدة لا تزيد على (ثلاث) سنوات. ويسري هذا الحكم على شركتي ضيافة الحجاج التي تقدم الخدمة بنفسها.\nد- إلغاء ترخيص ممارسة نشاط تقديم الخدمة.\nالعقوبات المقررة على أعضاء مجالس إدارات شركات ضيافة الحجاج، أو شركات تقديم الخدمة، أو أي من العاملين فيها:\nأ- الإنذار.\nب- غرامة لا تزيد على (50,000) خمسين ألف ريال، ويجوز مضاعفة الغرامة في حال تكرار المخالفة.\nج- العزل من عضوية مجلس الإدارة أو الفصل من العمل في الشركة.\nد- الإيقاف عن مزاولة العمل في شركات ضيافة الحجاج وشركات تقديم الخدمة لمدة لا تزيد على (خمس) سنوات.", "laiha": ["l14"]}, {"num": "١٤", "id": "n14", "title": "المادة الرابعة عشرة", "subtitle": null, "text": "في حال إخلال أي من شركات تقديم الخدمة أو الشركتين المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (6) من المادة (الأولى) من النظام، التي تقدم الخدمة بنفسها، بالتزاماتها؛ فللوزارة الحق في اتخاذ ما يلزم من تدابير لضمان تقديم الخدمة للحجاج، بما في ذلك التعاقد مع أي شركة أخرى -مرخص لها- بتقديم الخدمة، والرجوع في قيمتها على الشركة المخالفة.", "laiha": ["l19"]}, {"num": "١٥", "id": "n15", "title": "المادة الخامسة عشرة", "subtitle": null, "text": "مع عدم الإخلال بأي عقوبة أشد مقررة نظاماً، يعاقب كل من يخالف حكم المادة (العشرين) من النظام، بغرامة لا تزيد على (500,000) خمسمائة ألف ريال مع ترحيل المخالف إذا كان وافداً، ويجوز مضاعفة الغرامة في حال تكرار المخالفة.", "laiha": ["l16"]}, {"num": "١٦", "id": "n16", "title": "المادة السادسة عشرة", "subtitle": null, "text": "يحق لمن صدر ضده أي قرار بناءً على أحكام النظام أو القرارات الصادرة تنفيذاً له؛ الاعتراض عليه أمام ديوان المظالم.", "laiha": []}, {"num": "١٧", "id": "n17", "title": "المادة السابعة عشرة", "subtitle": null, "text": "يتولى موظفون من الوزارة أو غيرهم -يصدر بتسميتهم قرار من الوزير- الرقابة على شركات ضيافة الحجاج وشركات تقديم الخدمة والتفتيش عليها وضبط ما يقع منها من مخالفات؛ لتطبيق أحكام النظام والقرارات الصادرة تنفيذاً له.", "laiha": []}, {"num": "١٨", "id": "n18", "title": "المادة الثامنة عشرة", "subtitle": null, "text": "مع عدم الإخلال بما للجهات الحكومية الأخرى من اختصاصات وفقاً للأنظمة، تخضع شركات ضيافة الحجاج وشركات تقديم الخدمة لإشراف الوزارة فيما يتعلق باختصاصها، وفقاً للأنظمة والتعليمات المنظمة لذلك.", "laiha": ["l17"]}, {"num": "١٩", "id": "n19", "title": "المادة التاسعة عشرة", "subtitle": null, "text": "تورد إلى الخزينة العامة للدولة مبالغ الغرامات المنصوص عليها في النظام والمقابل المالي لإصدار ترخيص ممارسة النشاط لشركات تقديم الخدمة.", "laiha": []}, {"num": "١٩ مكرر", "id": "n19b", "title": "المادة التاسعة عشرة مكرر", "subtitle": null, "text": "يجوز للوزارة إنشاء مجلس تنسيقي أو أكثر لمقدمي خدمة حجاج الخارج، وتحديد مسؤولياته ومهماته وما يلزم من أحكام أخرى.", "laiha": ["l20"]}, {"num": "٢٠", "id": "n20", "title": "المادة العشرون", "subtitle": null, "text": "لا يجوز لأي شخص ذي صفة طبيعية أو اعتبارية أن يمارس -دون الحصول على ترخيص من الوزارة- نشاط تقديم الخدمة للحجاج.", "laiha": ["l18"]}, {"num": "٢١", "id": "n21", "title": "المادة الحادية والعشرون", "subtitle": null, "text": "تخضع شركات ضيافة الحجاج وشركات تقديم الخدمة -فيما لم يرد فيه نص خاص في النظام- لأحكام نظام الشركات.", "laiha": []}, {"num": "٢٢", "id": "n22", "title": "المادة الثانية والعشرون", "subtitle": null, "text": "يصدر الوزير اللائحة التنفيذية للنظام في مدة لا تتجاوز (تسعين) يوماً من تاريخ نشره.", "laiha": ["l21"]}, {"num": "٢٣", "id": "n23", "title": "المادة الثالثة والعشرون", "subtitle": null, "text": "يعمل بالنظام بعد تسعين يوماً من تاريخ نشره في الجريدة الرسمية.", "laiha": [], "titleEn": "", "textEn": ""}], "laihaList": [{"id": "l1", "num": "١", "title": "المادة الأولى", "subtitle": "التعريفات", "text": "يكون للألفاظ والمصطلحات الواردة في هذه اللائحة ذات المعنى المبيّن أمام كل منها في النظام، والألفاظ التي لم ترد في النظام تكون لها المعاني الآتية أمام كل منها في هذه اللائحة:\n1. النظام: نظام مقدمي خدمة حجاج الخارج الصادر بالمرسوم الملكي رقم (م/111) وتاريخ 17/09/1440هـ، المعدل بالمرسوم الملكي رقم (م/89) وتاريخ 12/5/1447هـ.\n2. اللائحة: اللائحة التنفيذية لنظام مقدمي خدمة حجاج الخارج.\n3. التصنيف النوعي والكمي: تصنيف تصدره الوزارة لخدمات الحجاج وآليات تسعيرها، وتحديد شروط ومتطلبات تقديم كل خدمة والضمانات المالية اللازمة لذلك.\n4. شروط الترخيص لشركات تقديم الخدمة: الشروط التي تصدرها الوزارة لتنظيم عملية الترخيص لشركات تقديم الخدمة بموجب النظام.\n5. الترخيص: وثيقة تصدرها الوزارة لمقدمي الخدمة تسمح بموجبها بتقديم خدمات الحجاج.\n6. المنصة: هي المنصة أو المنصات الإلكترونية المعتمدة من قبل الوزارة لإبرام التعاقدات الخاصة بخدمات الحجاج.\n7. الخدمات: الخدمة أو حزم الخدمات التي تقدمها شركات تقديم الخدمة للحجاج.\n8. الموافقة/الموافقات الموسمية: موافقة تصدرها الوزارة في كل موسم حج لمقدمي الخدمة الذين استوفوا شروط ومتطلبات الخدمة الواردة في التصنيف النوعي والكمي بغرض السماح بتقديم الخدمة في الموسم المحدد.\n9. مقدمو الخدمة: شركات تقديم الخدمة المرخصة من الوزارة، والشركتان المشار إليهما في الفقرتين الفرعيتين (ب) و(ج) من الفقرة (6) من المادة الأولى من النظام."}, {"id": "l2", "num": "٢", "title": "المادة الثانية", "subtitle": "اختصاصات الوزارة", "text": "لغرض تحقيق أهداف النظام ومع مراعاة ما ورد بالنظام تختص الوزارة بما يلي:\n1. الإشراف على شركات ضيافة الحجاج.\n2. الترخيص لشركات تقديم الخدمة والإشراف عليها.\n3. تدريب وتأهيل العاملين في قطاع خدمة ضيوف الرحمن.\n4. اتخاذ كافة القرارات اللازمة لتنفيذ النظام واللائحة.\n5. تقييم أداء مقدمي الخدمة وقياس الرضا عن الخدمات.\n6. إصدار التصنيف النوعي والكمي للخدمات المقدمة للحجاج والتعليمات المنظمة لتقديم الخدمات.\n7. إصدار الموافقات الموسمية لمقدمي الخدمة.\n8. تحديد المواقع في المشاعر المقدسة لمقدمي الخدمة."}, {"id": "l3", "num": "٣", "title": "المادة الثالثة", "subtitle": "شركات ضيافة الحجاج", "text": "يجب أن يكون جميع أعضاء مجالس إدارات شركات ضيافة الحجاج ومديريها التنفيذيين وكافة شاغلي المناصب القيادية فيها من السعوديين."}, {"id": "l4", "num": "٤", "title": "المادة الرابعة", "subtitle": "تداول أسهم شركات ضيافة الحجاج", "text": "يُعد باطلاً أي بيع أو تداول لأسهم شركات ضيافة الحجاج يتم لصالح غير السعوديين، بأي شكل من أشكال التصرف."}, {"id": "l5", "num": "٥", "title": "المادة الخامسة", "subtitle": "التصرف في أسهم غير السعوديين", "text": "1. تُقصر ملكية شركات ضيافة الحجاج على السعوديين.\n2. في حال انتقال أي من أسهم شركات ضيافة الحجاج إلى غير سعودي بطريق الإرث، يجب على الشركة المعنية فور علمها بالواقعة إشعار من انتقلت إليه الأسهم بوجوب التخارج منها مع بيان الإجراءات والآليات اللازمة لذلك، ويجب عليه التخارج من تلك الأسهم خلال مدة ستة (6) أشهر من تاريخ ذلك الإشعار.\n3. يكون التخارج وفقاً لأحكام نظام الشركات ولوائحه.\n4. يجب على شركات ضيافة الحجاج اتخاذ الإجراءات النظامية عند عدم التزام أي من الورثة غير السعوديين بالتخارج بعد انقضاء المدة المحددة في الفقرة (2) من هذه المادة."}, {"id": "l6", "num": "٦", "title": "المادة السادسة", "subtitle": "التصنيف النوعي والكمي", "text": "أولاً: تضع الوزارة تصنيفاً نوعياً وكمياً للخدمات وشروط ومتطلبات تقديم الخدمة، على أن يشمل ما يلي:\n1. المعايير الأساسية لمستوى تقديم الخدمة.\n2. توصيف الخدمات.\n3. آليات التعاقد.\n4. مكونات حزم الخدمات.\n5. آلية تسعير الخدمة.\n6. ضمانات تقديم الخدمة.\n7. التعليمات والإجراءات المنظمة لتقديم الخدمة، بما فيها شروط وضوابط الموافقة الموسمية.\n8. معايير تقييم الأداء، ومعايير قياس مستوى الرضا.\n9. كل ما تراه الوزارة مما يندرج تحت التصنيف النوعي والكمي وآلية التسعير.\nثانياً: تراجع الوزارة التصنيف النوعي والكمي وشروط ومتطلبات تقديم الخدمة بشكل دوري وتعمل على تطويرها متى دعت الحاجة إلى ذلك.\nثالثاً: يجب تقديم الخدمة للحجاج وفق التصنيف النوعي والكمي وشروط ومتطلبات تقديم الخدمة خلال موسم الحج."}, {"id": "l7", "num": "٧", "title": "المادة السابعة", "subtitle": "نطاق اختصاص مقدمي الخدمات", "text": "تحدد الوزارة اختصاص مقدمي الخدمة المرخص لهم بتقديم الخدمات للحجاج، وفق الآتي:\n1. الخدمة الشاملة: تقديم خدمات السكن والإعاشة والنقل في كافة مواقع الخدمة (مكة المكرمة - المدينة المنورة - المشاعر المقدسة) والخدمات الإثرائية وفقاً للضوابط التي تعتمدها الوزارة.\n2. الخدمة المتخصصة: تقديم خدمة أو أكثر من الخدمات التي تُقدم للحجاج في مكة المكرمة أو المشاعر المقدسة أو في المدينة المنورة.\n3. خدمات الاستقبال والتوديع: استقبال وتوديع الحجاج عبر مختلف منافذ المملكة (البرية والبحرية والجوية)."}, {"id": "l8", "num": "٨", "title": "المادة الثامنة", "subtitle": "شروط منح الترخيص وتجديده", "text": "أولاً: يجب على كل من يرغب في ممارسة نشاط تقديم الخدمة للحجاج الحصول على ترخيص من الوزارة وفقاً للشروط والإجراءات التي تحددها.\nثانياً: تعد الوزارة شروط منح الترخيص وتجديده على أن يراعى فيها ما يلي:\n1. أن تكون المنشأة سعودية، ولديها سجل تجاري ساري المفعول.\n2. تحديد الخبرات والقدرات الفنية والإدارية والمالية اللازمة لممارسة النشاط.\n3. ألا يكون قد صدر بحق المنشأة قرار نهائي بإلغاء ترخيص ممارسة نشاط تقديم خدمات حجاج الخارج.\n4. تحديد المقابل المالي للترخيص وتجديده.\n5. أداء مقدم الخدمة في السنوات السابقة بالنسبة لطلبات التجديد."}, {"id": "l9", "num": "٩", "title": "المادة التاسعة", "subtitle": "إجراءات تقديم طلب الترخيص", "text": "1. يقدم طلب الترخيص إلى الإدارة المختصة بالوزارة وفق الآليات والوسائل التي تحددها وتعلن عنها الوزارة.\n2. يجب أن يكون الطلب مستوفياً للبيانات والمستندات المطلوبة.\n3. للوزارة طلب استكمال أي متطلبات لازمة لدراسة الطلب.\n4. يجب سداد المقابل المالي للترخيص في الموعد الذي تحدده الوزارة."}, {"id": "l10", "num": "١٠", "title": "المادة العاشرة", "subtitle": "إجراءات تقديم طلب تجديد الترخيص", "text": "أولاً: يتم تجديد الترخيص بطلب من مقدم الخدمة، ووفق الضوابط التالية:\n1. يلتزم المرخص له بتقديم طلب تجديد الترخيص قبل ستين (60) يوماً على الأقل من تاريخ انتهائه، ومع ذلك، يجوز للوزارة وفقاً لتقديرها المطلق قبول الطلبات المقدمة بعد هذه المدة أو رفضها.\n2. استيفاء جميع شروط منح الترخيص.\n3. سداد الغرامات المالية (إن وُجدت).\n4. سداد المقابل المالي للتجديد في الموعد الذي تحدده الوزارة.\nثانياً: لا يجوز ممارسة النشاط بعد انتهاء مدة الترخيص."}, {"id": "l11", "num": "١١", "title": "المادة الحادية عشرة", "subtitle": "طلبات الترخيص والتجديد", "text": "1. تتولى الإدارة المختصة بالوزارة فحص ودراسة الطلبات الجديدة وطلبات التجديد للترخيص والبت فيها.\n2. لا يترتب على تقديم طلب الحصول على الترخيص أو تجديده، أو استيفاء متطلباته وشروطه، أي حق لمقدمه في الحصول على الترخيص أو تجديده، ولا يُمنح الترخيص أو يُجدد إلا بقرار من الوزير، وفقاً لما تقتضيه المصلحة العامة."}, {"id": "l12", "num": "١٢", "title": "المادة الثانية عشرة", "subtitle": "تعليق العمل بالترخيص", "text": "للوزارة تعليق العمل بالترخيص في الحالات التالية:\n1. إخلال المرخص له بأي من شروط الترخيص، ويلتزم المرخص له باستكمال الإجراءات والاشتراطات خلال مدة ثلاثين (30) يوماً، وإلا جاز للوزارة إلغاء الترخيص.\n2. تعليق السجل التجاري من قبل الجهات المختصة."}, {"id": "l13", "num": "١٣", "title": "المادة الثالثة عشرة", "subtitle": "طلب إلغاء الترخيص", "text": "لمقدم الخدمة التقدم للوزارة بطلب إلغاء الترخيص بعد سداد الغرامات والمستحقات المالية وأداء كافة الالتزامات المقررة عليه إن وُجدت، متضمناً أسباب طلب الإلغاء، وتتولى الإدارة المختصة بالوزارة استلام الطلب ودراسته وإبلاغ مقدم الطلب بأحد القرارين التاليين:\n1. قبول طلب الإلغاء.\n2. رفض طلب الإلغاء إذا رأت بناءً على تقديرها ضرورة استمرار الترخيص، على أن يكون الرفض مسبباً."}, {"id": "l14", "num": "١٤", "title": "المادة الرابعة عشرة", "subtitle": "إلغاء الترخيص", "text": "يُلغى الترخيص بقرار من الوزير، في أي من الحالات الآتية:\n1. صدور عقوبة بإلغاء الترخيص.\n2. طلب صاحب الترخيص، مع مراعاة ما نصت عليه المادة الثالثة عشرة من هذه اللائحة.\n3. فقدان أحد شروط منح الترخيص، وذلك بمراعاة ما ورد في الفقرة (1) من المادة (الثانية عشرة).\n4. شطب السجل التجاري.\n5. إذا لم يباشر مقدم الخدمة تقديم الخدمات موسمين متتاليين أو ثلاثة مواسم متفرقة دون تقديم عذر تقبله الوزارة."}, {"id": "l15", "num": "١٥", "title": "المادة الخامسة عشرة", "subtitle": "الموافقة الموسمية", "text": "1. لا يجوز ممارسة الخدمة دون الحصول على الموافقة الموسمية.\n2. تصدر الوزارة شروط وضوابط إصدار الموافقة الموسمية، ومعايير المفاضلة بين مقدمي الخدمة للحصول على الموافقة الموسمية، على أساس الإمكانات المالية والإدارية والتشغيلية، وما تراه الوزارة من شروط أو معايير أخرى.\n3. تحدد الوزارة لمقدمي الخدمة الحاصلين على الموافقة الموسمية، عدد الحجاج الذين يتم تخديمهم خلال الموسم واختصاصاتهم في تقديم الخدمة.\n4. تتولى الوزارة تحديد مواقع الخدمة بالمشاعر المقدسة لمقدمي الخدمة الحاصلين على الموافقة الموسمية، ضمن النطاق المخصص لإسكان الحجاج بالتنسيق مع الجهة المختصة."}, {"id": "l16", "num": "١٦", "title": "المادة السادسة عشرة", "subtitle": "الالتزامات المستمرة", "text": "1. تقديم الخدمات للحجاج وفق المستويات المتعاقد عليها، والتصنيف النوعي والكمي المعتمد من الوزارة.\n2. الالتزام بالقرارات والتعليمات التي تصدرها الوزارة.\n3. التعاقد على الخدمات من خلال المنصة ووفق نماذج العقود والاتفاقيات المعتمدة من الوزارة.\n4. التعاون مع موظفي الوزارة والجهات المختصة، وتسهيل وصولهم إلى المعلومات والسجلات اللازمة.\n5. التعامل مع الحجاج بما يراعي آداب اللياقة والاحترام، ومعالجة الشكاوى والبلاغات بما يضمن حماية حقوق الحجاج وجودة الخدمات.\n6. عدم تقديم الخدمة إلا للحجاج المصرح لهم بأداء الحج ووفق ما تقتضي به الأنظمة والتعليمات ذات العلاقة.\n7. عدم استخدام اسم الوزارة وشعارها في أي إعلان أو نشاط إلا بعد الحصول على موافقتها.\n8. تزويد الوزارة عند الطلب بأي معلومات أو بيانات من خلال أي وسيلة تراها مناسبة وخلال المدة التي تحددها.\n9. الالتزام بجميع شروط الترخيص.\n10. الربط مع أنظمة الوزارة التقنية وفق التعليمات التي تقررها الوزارة.\n11. تقديم الضمانات المالية، وإثبات القدرات الإدارية والتشغيلية، التي تقررها الوزارة للخدمات المقدمة للحجاج وفقاً للتصنيف النوعي والكمي."}, {"id": "l17", "num": "١٧", "title": "المادة السابعة عشرة", "subtitle": "تقييم الأداء وقياس الرضا", "text": "تضع الوزارة آلية التعامل مع شركات تقديم الخدمة التي لم تحقق الحد الأدنى من المستهدفات الواردة في مؤشرات تقييم الأداء وقياس الرضا، ولا يحول ذلك دون تطبيق العقوبات المنصوص عليها في النظام بحق مقدمي الخدمات المخالفين."}, {"id": "l18", "num": "١٨", "title": "المادة الثامنة عشرة", "subtitle": "لجنة النظر في المخالفات", "text": "أولاً: تشكيل لجنة النظر في مخالفات أحكام النظام أو القرارات الصادرة تنفيذاً له:\n1. تُشكل اللجنة وفقاً لما ورد في المادة الثانية عشرة من النظام من خمسة أعضاء، من حملة المؤهلات الشرعية أو النظامية، بموجب قرار صادر من الوزير، ويحدد فيه رئيس اللجنة ونائبه، ويكون للأخير صلاحيات الرئيس عندما يحل محله.\n2. يُشكل جهاز إداري للجنة ويُسمى أعضاؤه في ذات القرار الصادر بتشكيل اللجنة، ويُعنى الجهاز بالشؤون الإدارية للجنة ومساندة أعمالها.\n3. تكون اللجنة مستقلة في عملها وتنعقد في مقر الوزارة أو أي من فروعها، أو عن بعد.\n4. يجب ألا يكون لأي عضو في اللجنة أي مصلحة مع أي شخص أو جهة من الجهات التي يُنظر في مخالفتها، ويجب عليه أن يفصح عن ذلك فور معرفته بالمصلحة، والتنحي وعدم مشاركة اللجنة في نظر ذلك الموضوع.\n5. مدة اللجنة ثلاث سنوات من تاريخ قرار تشكيلها، ويجوز إنهاؤها قبل حلول موعد انتهائها وإعادة تشكيلها بموجب قرار يصدر من الوزير.\n6. يحدد الوزير مكافآت أعضاء اللجنة، وجهازها الإداري.\n7. في حال تغيّب عضو اللجنة عن حضور ثلاث جلسات متوالية أو متفرقة خلال سنة دون سبب يقبله رئيس اللجنة يتم عزله ويعيّن الوزير بديلاً له.\n8. تعد الوزارة الإجراءات التفصيلية لعمل لجنة النظر في مخالفات أحكام النظام أو القرارات الصادرة تنفيذاً له، بما في ذلك ما يتعلق بالجهاز الإداري، والمدد النظامية، وعدد الجلسات، وضبطها، وآلية الاستدعاء والتواصل مع اللجنة.\nثانياً: تختص اللجنة بما يلي:\n1. النظر في مخالفات شركات ضيافة الحجاج وشركات تقديم الخدمة لأحكام النظام، أو القرارات الوزارية الصادرة تنفيذاً له، المحالة لها من صاحب الصلاحية وإيقاع العقوبات المنصوص عليها في النظام.\n2. النظر في المخالفات المتعلقة بتقديم الخدمة من الأشخاص ذوي الصفة الاعتبارية أو الطبيعية دون الحصول على الترخيص اللازم من الوزارة.\n3. النظر في المخالفات المتعلقة بأعضاء مجالس الإدارة أو المدراء التنفيذيين أو غيرهم من العاملين في شركات ضيافة الحجاج أو شركات تقديم الخدمة.\n4. إذا كانت المخالفة المرفوعة للجنة منطوية على مخالفة يعاقب عليها أنظمة أخرى، فعليها إحالتها إلى الجهة المختصة لاتخاذ ما يلزم نظاماً، واتخاذ القرار بشأن المخالفة ما لم يتبيّن عدم إمكانية اتخاذ القرار في إحداهما دون الأخرى.\nثالثاً: تصدر الوزارة دليلاً استرشادياً بتوصيف المخالفات وما يقابلها من عقوبات، ودليل الإجراءات الرقابية على مقدمي الخدمة للحجاج."}, {"id": "l19", "num": "١٩", "title": "المادة التاسعة عشرة", "subtitle": "ضمان استمرار الخدمة للحجاج", "text": "1. على مقدمي الخدمة اتخاذ ما يلزم من احتياطات لضمان استمرار أداء الخدمة للحجاج.\n2. مع مراعاة ما ورد بالمادة الرابعة عشرة من النظام فإنه في حال إخلال أي من مقدمي الخدمة بالتزاماتهم، أو تعطلهم لأي سبب كان، يحق للوزارة اتخاذ جميع التدابير اللازمة بما في ذلك تكليف مقدم خدمة آخر مرخص له بتقديم الخدمة والرجوع بقيمتها على مقدم الخدمة المخالف عن طريق تسييل الضمانات المالية المودعة لدى الوزارة، وفي حال عدم كفايتها يتم الرجوع عليه وفق الوسائل النظامية، وتضع الوزارة آلية لتنظيم ذلك، ولا يخل ذلك باستعادة مبالغ الخدمات التي لم تُقدم للحجاج أو قُدمت بشكل غير المتفق عليه."}, {"id": "l20", "num": "٢٠", "title": "المادة العشرون", "subtitle": "المجالس التنسيقية", "text": "أولاً: يجوز للوزارة إنشاء مجلس تنسيقي واحد أو أكثر لمقدمي خدمة حجاج الخارج، ويُحدد من خلال لائحة يعتمدها الوزير ما يلي:\n1. أهداف المجلس ومهامه.\n2. مسؤولياته في التنسيق بين مقدمي الخدمة وتطوير الأداء.\n3. آلية تشكيله، وعدد أعضائه، وطريقة اختيارهم.\n4. مدة العضوية، وآلية انعقاد الاجتماعات واتخاذ القرارات.\n5. العلاقة التنظيمية بين المجلس والوزارة، وأي جهات أخرى ذات صلة.\n6. الأحكام الإدارية والمالية اللازمة لضمان فاعلية المجلس وتحقيق أهدافه.\nثانياً: يجب على مقدمي الخدمة الالتزام بما يصدره المجلس التنسيقي من تعليمات وفق الصلاحيات المقررة له في اللائحة المشار إليها في الفقرة (أولاً) من هذه المادة."}, {"id": "l21", "num": "٢١", "title": "المادة الحادية والعشرون", "subtitle": "نفاذ اللائحة وتفسير أحكامها", "text": "1. تُعد هذه اللائحة نافذة من تاريخ إقرارها من الوزير، وتحل محل اللائحة التنفيذية لنظام مقدمي خدمة حجاج الخارج الصادرة بالقرار الوزاري رقم (440521014) وتاريخ 21/5/1444هـ.\n2. للوزير تفسير أحكام هذه اللائحة وتعديل أحكامها، والاستثناء منها، كلما دعت الحاجة لذلك ووفق ما تقرره مقتضيات المصلحة العامة."}]};
+</script>
+<script>
+const laihaMap = {};
+DATA.laihaList.forEach(l => laihaMap[l.id] = l);
+
+const TEAM = ["بتول عبدالمحسن الزهراني","رهف عبد الجبار الثقفي","روز مسيفر المطرفي","أبرار جابر الثقفي","ليلى داحش محزري"];
+const SUPERVISOR = "أ. خولة عبد الرحمن البكاري";
+
+const grid = document.getElementById('grid');
+const overlay = document.getElementById('overlay');
+const detailBox = document.getElementById('detailBox');
+const aboutOverlay = document.getElementById('aboutOverlay');
+const searchInput = document.getElementById('searchInput');
+const statRow = document.getElementById('statRow');
+const chips = document.querySelectorAll('.chip');
+const navLinks = document.querySelectorAll('nav.links a');
+
+let activeFilter = 'all';
+let query = '';
+let currentId = null;
+
+function getFavs(){
+  try{ return JSON.parse(localStorage.getItem('wasl_favs') || '[]'); }
+  catch(e){ return []; }
+}
+function setFavs(list){
+  try{ localStorage.setItem('wasl_favs', JSON.stringify(list)); }catch(e){}
+}
+function isFav(id){ return getFavs().includes(id); }
+function toggleFav(id){
+  let favs = getFavs();
+  favs = favs.includes(id) ? favs.filter(x=>x!==id) : [...favs, id];
+  setFavs(favs);
+}
+
+function renderStats(){
+  const total = DATA.nizam.length;
+  const linked = DATA.nizam.filter(a => a.laiha.length).length;
+  const links = DATA.nizam.reduce((s,a)=>s+a.laiha.length,0);
+  statRow.innerHTML = `
+    <div class="stat-card"><b>${total}</b><span>مادة في النظام</span></div>
+    <div class="stat-card"><b>${DATA.laihaList.length}</b><span>مادة في اللائحة</span></div>
+    <div class="stat-card"><b>${linked}</b><span>مادة مرتبطة</span></div>
+    <div class="stat-card"><b>${links}</b><span>رابط مادة-بمادة</span></div>
+  `;
+}
+
+function laihaCountLabel(n){
+  if(n === 1) return 'مادة واحدة في اللائحة';
+  if(n === 2) return 'مادتان في اللائحة';
+  if(n >= 3 && n <= 10) return `${n} مواد في اللائحة`;
+  return `${n} مادة في اللائحة`;
+}
+
+function excerpt(text){
+  const clean = text.replace(/\n/g,' ').trim();
+  return clean.length > 130 ? clean.slice(0,130) + '…' : clean;
+}
+
+function matchesQuery(article, q){
+  if(!q) return true;
+  const hay = (article.num + ' ' + article.title + ' ' + (article.subtitle||'') + ' ' + article.text).toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function render(){
+  let items = DATA.nizam.filter(a => {
+    if(activeFilter === 'linked' && a.laiha.length === 0) return false;
+    if(activeFilter === 'none' && a.laiha.length > 0) return false;
+    if(activeFilter === 'fav' && !isFav(a.id)) return false;
+    return matchesQuery(a, query);
+  });
+
+  if(items.length === 0){
+    const msg = activeFilter === 'fav' ? 'ما ضفتِ أي مادة للمفضلة بعد' : 'ما فيه مواد تطابق البحث الحالي';
+    grid.innerHTML = `<div class="no-results">${msg}</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(a => {
+    const hasLink = a.laiha.length > 0;
+    const badge = hasLink
+      ? `<span class="badge linked">${laihaCountLabel(a.laiha.length)}</span>`
+      : `<span class="badge none">بلا مقابل</span>`;
+    const favActive = isFav(a.id) ? 'active' : '';
+    return `
+      <div class="card" data-id="${a.id}">
+        <div class="card-top">
+          <div class="card-num">${a.title}</div>
+          <div class="card-top-right">
+            ${badge}
+            <button class="fav-btn ${favActive}" data-fav="${a.id}" title="إضافة للمفضلة">★</button>
+          </div>
+        </div>
+        ${a.subtitle ? `<div class="card-subtitle">${a.subtitle}</div>` : ''}
+        <div class="card-excerpt">${excerpt(a.text)}</div>
+        <div class="card-foot">عرض المقارنة ←</div>
+      </div>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.fav-btn')) return;
+      openDetail(card.dataset.id);
+    });
+  });
+  grid.querySelectorAll('.fav-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      toggleFav(btn.dataset.fav);
+      render();
+    });
+  });
+}
+
+function renderDetailBody(a){
+  const noRegHtml = `
+    <div class="empty-reg">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#5B6570" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+      <b>لا يوجد نص مقابل في اللائحة</b>
+      <span>هذه المادة لم يرد لها تفصيل تنفيذي مستقل</span>
+    </div>
+  `;
+
+  const regHtml = a.laiha.length ? a.laiha.map(lid => {
+    const l = laihaMap[lid];
+    if(!l) return '';
+    return `
+      <div class="reg-block">
+        <div class="rb-num">${l.title}</div>
+        ${l.subtitle ? `<div class="rb-sub">${l.subtitle}</div>` : ''}
+        <div class="article-text">${l.text}</div>
+      </div>
+    `;
+  }).join('') : noRegHtml;
+
+  const noteHtml = a.note ? `<div class="note-flag">ملاحظة: ${a.note}</div>` : '';
+
+  return `
+    <div class="compare">
+      <div class="col system">
+        <div class="col-label"><span class="dot system"></span> نص النظام</div>
+        <div class="article-text">${a.text}</div>
+        ${noteHtml}
+      </div>
+      <div class="col reg">
+        <div class="col-label"><span class="dot reg"></span> النص المقابل في اللائحة التنفيذية</div>
+        ${regHtml}
+      </div>
+    </div>
+  `;
+}
+
+function openDetail(id){
+  const a = DATA.nizam.find(x => x.id === id);
+  if(!a) return;
+  currentId = id;
+
+  const idx = DATA.nizam.findIndex(x => x.id === id);
+  const prev = idx > 0 ? DATA.nizam[idx-1] : null;
+  const next = idx < DATA.nizam.length - 1 ? DATA.nizam[idx+1] : null;
+
+  detailBox.innerHTML = `
+    <div class="detail-head">
+      <button class="detail-close" id="closeBtn">✕</button>
+      <div class="k">النظام</div>
+      <h2>${a.title}</h2>
+      ${a.subtitle ? `<div class="sub">${a.subtitle}</div>` : ''}
+    </div>
+    <div class="detail-nav">
+      <button class="nav-btn" id="prevBtn" ${prev ? '' : 'disabled'}>
+        ${prev ? `→ ${prev.title}` : '→ لا سابقة'}
+      </button>
+      <button class="nav-btn" id="nextBtn" ${next ? '' : 'disabled'}>
+        ${next ? `${next.title} ←` : 'لا لاحقة ←'}
+      </button>
+    </div>
+    <div id="compareWrap">${renderDetailBody(a)}</div>
+    <div class="detail-actions">
+      <button class="btn" id="favDetailBtn">${isFav(a.id) ? '★ إزالة من المفضلة' : '☆ إضافة للمفضلة'}</button>
+      <button class="btn" id="copyBtn">📋 نسخ النصين</button>
+      <button class="btn" id="printBtn">🖨 طباعة</button>
+    </div>
+  `;
+
+  document.getElementById('closeBtn').addEventListener('click', closeDetail);
+  document.getElementById('favDetailBtn').addEventListener('click', ()=>{
+    toggleFav(a.id);
+    document.getElementById('favDetailBtn').textContent = isFav(a.id) ? '★ إزالة من المفضلة' : '☆ إضافة للمفضلة';
+  });
+  if(prev) document.getElementById('prevBtn').addEventListener('click', ()=> openDetail(prev.id));
+  if(next) document.getElementById('nextBtn').addEventListener('click', ()=> openDetail(next.id));
+  document.getElementById('copyBtn').addEventListener('click', ()=>{
+    const regText = a.laiha.map(lid => laihaMap[lid] ? `${laihaMap[lid].title}\n${laihaMap[lid].text}` : '').join('\n\n');
+    const full = `${a.title}\n${a.text}\n\n— اللائحة التنفيذية —\n${regText || 'لا يوجد نص مقابل'}`;
+    navigator.clipboard.writeText(full).then(()=>{
+      const btn = document.getElementById('copyBtn');
+      const old = btn.innerHTML;
+      btn.innerHTML = '✓ تم النسخ';
+      setTimeout(()=> btn.innerHTML = old, 1500);
+    });
+  });
+  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+  overlay.classList.add('open');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(){
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  currentId = null;
+}
+
+function openAbout(){
+  document.getElementById('teamList').innerHTML = TEAM.map(n=>`<li>${n}</li>`).join('');
+  document.getElementById('supervisorList').innerHTML = `<li>${SUPERVISOR}</li>`;
+  aboutOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAbout(){
+  aboutOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeDetail(); });
+aboutOverlay.addEventListener('click', (e)=>{ if(e.target === aboutOverlay) closeAbout(); });
+document.getElementById('aboutClose').addEventListener('click', closeAbout);
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){ closeDetail(); closeAbout(); }
+  if(overlay.classList.contains('open') && currentId){
+    const idx = DATA.nizam.findIndex(x => x.id === currentId);
+    if(e.key === 'ArrowRight' && idx > 0) openDetail(DATA.nizam[idx-1].id);
+    if(e.key === 'ArrowLeft' && idx < DATA.nizam.length - 1) openDetail(DATA.nizam[idx+1].id);
+  }
+});
+
+searchInput.addEventListener('input', (e)=>{
+  query = e.target.value.trim();
+  render();
+});
+
+chips.forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+    render();
+  });
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click', ()=>{
+    const nav = link.dataset.nav;
+    if(nav === 'about'){ openAbout(); return; }
+    navLinks.forEach(l=>l.classList.remove('active'));
+    link.classList.add('active');
+    if(nav === 'favorites'){
+      chips.forEach(c=>c.classList.remove('active'));
+      document.querySelector('.chip[data-filter="fav"]').classList.add('active');
+      activeFilter = 'fav';
+    } else {
+      chips.forEach(c=>c.classList.remove('active'));
+      document.querySelector('.chip[data-filter="all"]').classList.add('active');
+      activeFilter = 'all';
+    }
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+renderStats();
+render();
+
+</script>
+</body>
+</html>
